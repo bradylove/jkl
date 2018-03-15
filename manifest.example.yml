@@ -1,5 +1,9 @@
 ---
 projects:
+- name: jkl
+  repository: git@github.com:bradylove/jkl.git
+  base_path: ~/gocode/src/github.com/bradylove/jkl
+  layout: main-vertical
 - name: loggregator
   alias: loggr
   repository: git@github.com:cloudfoundry/loggregator-release

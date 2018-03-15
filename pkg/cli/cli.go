@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
 	"strings"
 
 	"github.com/bradylove/jkl/pkg/manifest"
+	"github.com/bradylove/jkl/pkg/tmux"
 	cli "github.com/jawher/mow.cli"
 )
 
@@ -21,8 +21,8 @@ func Run(args []string) {
 		cmd.Spec = "PROJECTS..."
 
 		cmd.Action = func() {
-			tmux := os.Getenv("TMUX")
-			if tmux == "" {
+			tmuxVar := os.Getenv("TMUX")
+			if tmuxVar == "" {
 				log.Fatalln("jkl must be ran in TMUX")
 			}
 
@@ -31,9 +31,7 @@ func Run(args []string) {
 				log.Fatalf("failed to read jkl manifest: %s", err)
 			}
 
-			socket := strings.Split(tmux, ",")[0]
-			_, _ = m, socket
-
+			tm := tmux.New(strings.Split(tmuxVar, ",")[0])
 			for _, name := range *projects {
 				p, err := findProject(name, m.Projects)
 				if err != nil {
@@ -41,7 +39,10 @@ func Run(args []string) {
 					continue
 				}
 
-				launchProject(socket, p)
+				err = tm.CreateWindow(p.Name, p.BasePath)
+				if err != nil {
+					log.Printf("failed to open project '%s': %s", p.Name, err)
+				}
 			}
 		}
 	})
@@ -57,16 +58,4 @@ func findProject(name string, projects []manifest.Project) (manifest.Project, er
 	}
 
 	return manifest.Project{}, fmt.Errorf("project named %s not found in manifest", name)
-}
-
-func launchProject(socket string, p manifest.Project) {
-	cmd := exec.Command(os.Getenv("SHELL"), "-c",
-		fmt.Sprintf("tmux -S %s new-window -c %s -n %s ; split-window -h -c '#{pane_current_path}'",
-			socket, p.BasePath, p.Name,
-		),
-	)
-	err := cmd.Run()
-	if err != nil {
-		log.Fatalf("failed to execute tmux command: %s", err)
-	}
 }
