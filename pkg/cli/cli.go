@@ -28,11 +28,6 @@ func Run(args []string) {
 			cmd:         githubCommand,
 		},
 		{
-			name:        "goto",
-			description: "(not implemented) changes the current directory to the base_path of the given project",
-			cmd:         notImplementedPlan,
-		},
-		{
 			name:        "init",
 			description: "(not implemented) initializes the jkl config file",
 			cmd:         notImplementedPlan,
