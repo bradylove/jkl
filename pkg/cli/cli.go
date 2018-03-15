@@ -15,6 +15,23 @@ func Run(args []string) {
 	log := log.New(os.Stderr, "", 0)
 
 	app := cli.App("jkl", "project management life improver")
+
+	app.Command("edit", "opens the jkl manifest for editing", func(cmd *cli.Cmd) {
+		cmd.Action = func() { panic("not implemented") }
+	})
+
+	app.Command("github", "open the projects github page in the browser", func(cmd *cli.Cmd) {
+		cmd.Command("issues", "list github issues for a given project", func(cmd *cli.Cmd) {
+			cmd.Action = func() { panic("not implemented") }
+		})
+
+		cmd.Action = func() { panic("not implemented") }
+	})
+
+	app.Command("goto", "changes the current directory to the base_path of the given project", func(cmd *cli.Cmd) {
+		cmd.Action = func() { panic("not implemented") }
+	})
+
 	app.Command("open", "opens one or more projects", func(cmd *cli.Cmd) {
 		projects := cmd.StringsArg("PROJECTS", nil, "names of projects to open")
 
