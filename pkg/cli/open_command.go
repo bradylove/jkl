@@ -13,7 +13,7 @@ import (
 
 func openCommand(cmd *cli.Cmd) {
 	log := log.New(os.Stderr, "", 0)
-	projects := cmd.StringsArg("PROJECTS", nil, "names of projects to open")
+	projects := cmd.StringsArg("PROJECTS", nil, "names or aliases of projects to open")
 
 	cmd.Spec = "PROJECTS..."
 
