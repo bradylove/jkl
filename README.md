@@ -36,6 +36,7 @@ Usage: jkl COMMAND [arg...]
 project management life improver
 
 Commands:
+  init         (not implemented) initializes the jkl config file
   edit         (not implemented) opens the jkl manifest for editing
   github       (not implemented) open the projects github page in the browser
   goto         (not implemented) changes the current directory to the base_path of the given project
