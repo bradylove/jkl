@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/bradylove/jkl/pkg/manifest"
@@ -44,7 +45,7 @@ func Run(args []string) {
 				log.Fatalln("jkl must be ran in TMUX")
 			}
 
-			m, err := manifest.Load("/home/brady/.jkl.yml")
+			m, err := manifest.Load(filepath.Join(os.Getenv("HOME"), ".jkl"))
 			if err != nil {
 				log.Fatalf("failed to read jkl manifest: %s", err)
 			}
