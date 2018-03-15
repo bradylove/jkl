@@ -6,6 +6,10 @@ jkl makes it easy to switch from one project in a single command.
 
 **jkl only supports Linux and OSX.**
 
+## Why is it named jkl?
+
+No reason really other than it is short, quick and easy to type.
+
 ## Installation
 
 ### From Source
