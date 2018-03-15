@@ -38,7 +38,9 @@ func openCommand(cmd *cli.Cmd) {
 
 			var opts []tmux.CreateWindowOption
 			if p.WorkingPath != "" {
-				opts = append(opts, tmux.WithVerticalSplitPath(p.WorkingPath))
+				opts = append(opts, tmux.WithVerticalSplitPath(
+					filepath.Join(p.BasePath, p.WorkingPath)),
+				)
 			}
 
 			if p.Layout != "" {
