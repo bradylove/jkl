@@ -11,6 +11,7 @@ import (
 	cli "github.com/jawher/mow.cli"
 )
 
+// Run initializes and executes the CLI.
 func Run(args []string) {
 	log := log.New(os.Stderr, "", 0)
 
@@ -56,7 +57,16 @@ func Run(args []string) {
 					continue
 				}
 
-				err = tm.CreateWindow(p.Name, p.BasePath)
+				var opts []tmux.CreateWindowOption
+				if p.WorkingPath != "" {
+					opts = append(opts, tmux.WithVerticalSplitPath(p.WorkingPath))
+				}
+
+				if p.Layout != "" {
+					opts = append(opts, tmux.WithLayout(p.Layout))
+				}
+
+				err = tm.CreateWindow(p.Name, p.BasePath, opts...)
 				if err != nil {
 					log.Printf("failed to open project '%s': %s", p.Name, err)
 				}

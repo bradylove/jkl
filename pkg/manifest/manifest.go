@@ -31,6 +31,7 @@ type Project struct {
 	Alias       string `yaml:"alias"`
 	BasePath    string `yaml:"base_path"`
 	WorkingPath string `yaml:"working_path"`
+	Layout      string `yaml:"layout"`
 	Repository  string `yaml:"repository"`
 	Submodules  bool   `yaml:"submodules"`
 }

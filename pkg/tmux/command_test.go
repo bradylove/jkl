@@ -26,13 +26,46 @@ func TestCommandExecution(t *testing.T) {
 		cmd := cr.runCmds[0]
 		Expect(t, cmd.Path).To(Equal("/bin/bash"))
 
-		// Example of how to send multiple commands
-		// fmt.Sprintf("tmux -S %s new-window -c %s -n %s \\; split-window -h \\; split-window -h \\; split-window -h \\; select-layout main-vertical",
-
 		Expect(t, cmd.Args).To(Equal([]string{
 			"bash",
 			"-c",
 			"tmux -S /tmp/tmux-socket new-window -n one -c basepath",
+		}))
+	})
+
+	o.Spec("setup a new window with a split with path", func(t *testing.T) {
+		cr := &spyCommandRunner{}
+		tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
+
+		err := tm.CreateWindow("one", "basepath",
+			tmux.WithVerticalSplitPath("codepath"),
+		)
+		Expect(t, err).To(Not(HaveOccurred()))
+		Expect(t, cr.runCmds).To(HaveLen(1))
+
+		cmd := cr.runCmds[0]
+		Expect(t, cmd.Args).To(Equal([]string{
+			"bash",
+			"-c",
+			"tmux -S /tmp/tmux-socket new-window -n one -c basepath \\; split-window -h -c codepath",
+		}))
+	})
+
+	o.Spec("setup new window with layout", func(t *testing.T) {
+		cr := &spyCommandRunner{}
+		tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
+
+		err := tm.CreateWindow("one", "basepath",
+			tmux.WithLayout("main-horizontal"),
+		)
+		Expect(t, err).To(Not(HaveOccurred()))
+		Expect(t, cr.runCmds).To(HaveLen(1))
+
+		cmd := cr.runCmds[0]
+		Expect(t, cmd.Args).To(Equal([]string{
+			"bash",
+			"-c",
+			"tmux -S /tmp/tmux-socket new-window -n one -c basepath \\; select-layout main-horizontal",
 		}))
 	})
 }
