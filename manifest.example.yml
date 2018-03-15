@@ -1,0 +1,14 @@
+---
+projects:
+- name: loggregator
+  alias: loggr
+  repository: git@github.com:cloudfoundry/loggregator-release
+  submodules: true
+  base_path: ~/workspace/loggregator-release
+  working_path: src/code.cloudfoundry.org/loggregator
+- name: noisy-neighbor-nozzle
+  alias: nnn
+  repository: git@github.com:cloudfoundry/noisy-neighbor-nozzle-release
+  submodules: true
+  base_path: ~/workspace/noisy-neighbor-nozzle-release
+  working_path: src/code.cloudfoundry.org/noisy-neighbor-nozzle
