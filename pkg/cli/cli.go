@@ -18,11 +18,11 @@ func Run(args []string) {
 
 	app := cli.App("jkl", "project management life improver")
 
-	app.Command("edit", "opens the jkl manifest for editing", func(cmd *cli.Cmd) {
+	app.Command("edit", "(not implemented) opens the jkl manifest for editing", func(cmd *cli.Cmd) {
 		cmd.Action = func() { panic("not implemented") }
 	})
 
-	app.Command("github", "open the projects github page in the browser", func(cmd *cli.Cmd) {
+	app.Command("github", "(not implemented) open the projects github page in the browser", func(cmd *cli.Cmd) {
 		cmd.Command("issues", "list github issues for a given project", func(cmd *cli.Cmd) {
 			cmd.Action = func() { panic("not implemented") }
 		})
@@ -30,7 +30,7 @@ func Run(args []string) {
 		cmd.Action = func() { panic("not implemented") }
 	})
 
-	app.Command("goto", "changes the current directory to the base_path of the given project", func(cmd *cli.Cmd) {
+	app.Command("goto", "(not implemented) changes the current directory to the base_path of the given project", func(cmd *cli.Cmd) {
 		cmd.Action = func() { panic("not implemented") }
 	})
 

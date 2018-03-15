@@ -36,9 +36,9 @@ Usage: jkl COMMAND [arg...]
 project management life improver
 
 Commands:
-  edit         opens the jkl manifest for editing
-  github       open the projects github page in the browser
-  goto         changes the current directory to the base_path of the given project
+  edit         (not implemented) opens the jkl manifest for editing
+  github       (not implemented) open the projects github page in the browser
+  goto         (not implemented) changes the current directory to the base_path of the given project
   open         opens one or more projects
 
 Run 'jkl COMMAND --help' for more information on a command.
