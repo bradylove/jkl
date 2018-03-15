@@ -14,7 +14,7 @@ func Run(args []string) {
 	commands := []command{
 		{
 			name:        "open",
-			description: "opens one or more projects",
+			description: "(limited) opens one or more projects",
 			cmd:         openCommand,
 		},
 		{
