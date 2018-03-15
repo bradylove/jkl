@@ -16,7 +16,7 @@ go get -u github.com/bradylove/jkl/cmd/jkl
 
 ## Example Configuration
 
-``` yaml $HOME/.jkl
+``` yaml
 ---
 projects:
 - name: jkl
@@ -28,7 +28,7 @@ projects:
 
 ## Usage
 
-``` bash
+```
 $ jkl --help
 
 Usage: jkl COMMAND [arg...]
