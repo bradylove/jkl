@@ -11,7 +11,7 @@ jkl makes it easy to switch from one project in a single command.
 ### From Source
 
 ```
-go get -u github.com/bradylove/jkl
+go get -u github.com/bradylove/jkl/cmd/jkl
 ```
 
 ## Example Configuration
