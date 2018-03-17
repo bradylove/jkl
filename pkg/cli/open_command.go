@@ -20,7 +20,7 @@ func openCommand(cmd *cli.Cmd) {
 	cmd.Action = func() {
 		tmuxVar := os.Getenv("TMUX")
 		if tmuxVar == "" {
-			log.Fatalln("jkl must be ran in TMUX")
+			log.Fatalln("jkl open must be ran in TMUX")
 		}
 
 		m, err := manifest.Load(filepath.Join(os.Getenv("HOME"), ".jkl"))

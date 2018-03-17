@@ -13,6 +13,11 @@ func Run(args []string) {
 
 	commands := []command{
 		{
+			name:        "goto",
+			description: "change the current directory of the current tmux pane to the specified project directory",
+			cmd:         gotoCommand,
+		},
+		{
 			name:        "open",
 			description: "(limited) opens one or more projects",
 			cmd:         openCommand,

@@ -15,57 +15,74 @@ func TestCommandExecution(t *testing.T) {
 	o := onpar.New()
 	defer o.Run(t)
 
-	o.Spec("setup a new window for a project", func(t *testing.T) {
-		cr := &spyCommandRunner{}
-		tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
+	o.Group("CreateWindow", func() {
+		o.Spec("setup a new window for a project", func(t *testing.T) {
+			cr := &spyCommandRunner{}
+			tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
 
-		err := tm.CreateWindow("one", "basepath")
-		Expect(t, err).To(Not(HaveOccurred()))
-		Expect(t, cr.runCmds).To(HaveLen(1))
+			err := tm.CreateWindow("one", "basepath")
+			Expect(t, err).To(Not(HaveOccurred()))
+			Expect(t, cr.runCmds).To(HaveLen(1))
 
-		cmd := cr.runCmds[0]
-		Expect(t, cmd.Path).To(Equal("/bin/bash"))
+			cmd := cr.runCmds[0]
+			Expect(t, cmd.Path).To(Equal("/bin/bash"))
 
-		Expect(t, cmd.Args).To(Equal([]string{
-			"bash",
-			"-c",
-			"tmux -S /tmp/tmux-socket new-window -n one -c basepath",
-		}))
+			Expect(t, cmd.Args).To(Equal([]string{
+				"bash",
+				"-c",
+				"tmux -S /tmp/tmux-socket new-window -n one -c basepath",
+			}))
+		})
+
+		o.Spec("setup a new window with a split with path", func(t *testing.T) {
+			cr := &spyCommandRunner{}
+			tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
+
+			err := tm.CreateWindow("one", "basepath",
+				tmux.WithVerticalSplitPath("codepath"),
+			)
+			Expect(t, err).To(Not(HaveOccurred()))
+			Expect(t, cr.runCmds).To(HaveLen(1))
+
+			cmd := cr.runCmds[0]
+			Expect(t, cmd.Args).To(Equal([]string{
+				"bash",
+				"-c",
+				"tmux -S /tmp/tmux-socket new-window -n one -c basepath \\; split-window -h -c codepath",
+			}))
+		})
+
+		o.Spec("setup new window with layout", func(t *testing.T) {
+			cr := &spyCommandRunner{}
+			tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
+
+			err := tm.CreateWindow("one", "basepath",
+				tmux.WithLayout("main-horizontal"),
+			)
+			Expect(t, err).To(Not(HaveOccurred()))
+			Expect(t, cr.runCmds).To(HaveLen(1))
+
+			cmd := cr.runCmds[0]
+			Expect(t, cmd.Args).To(Equal([]string{
+				"bash",
+				"-c",
+				"tmux -S /tmp/tmux-socket new-window -n one -c basepath \\; select-layout main-horizontal",
+			}))
+		})
 	})
 
-	o.Spec("setup a new window with a split with path", func(t *testing.T) {
+	o.Group("ChangeDirectory", func() {
 		cr := &spyCommandRunner{}
 		tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
 
-		err := tm.CreateWindow("one", "basepath",
-			tmux.WithVerticalSplitPath("codepath"),
-		)
+		err := tm.ChangeDirectory("~/")
 		Expect(t, err).To(Not(HaveOccurred()))
-		Expect(t, cr.runCmds).To(HaveLen(1))
 
 		cmd := cr.runCmds[0]
 		Expect(t, cmd.Args).To(Equal([]string{
 			"bash",
 			"-c",
-			"tmux -S /tmp/tmux-socket new-window -n one -c basepath \\; split-window -h -c codepath",
-		}))
-	})
-
-	o.Spec("setup new window with layout", func(t *testing.T) {
-		cr := &spyCommandRunner{}
-		tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
-
-		err := tm.CreateWindow("one", "basepath",
-			tmux.WithLayout("main-horizontal"),
-		)
-		Expect(t, err).To(Not(HaveOccurred()))
-		Expect(t, cr.runCmds).To(HaveLen(1))
-
-		cmd := cr.runCmds[0]
-		Expect(t, cmd.Args).To(Equal([]string{
-			"bash",
-			"-c",
-			"tmux -S /tmp/tmux-socket new-window -n one -c basepath \\; select-layout main-horizontal",
+			"tmux -S /tmp/tmux-socket send-keys '~/' Enter",
 		}))
 	})
 }

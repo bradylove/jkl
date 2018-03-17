@@ -41,6 +41,17 @@ func (t Tmux) CreateWindow(name, path string, opts ...CreateWindowOption) error 
 	return t.commandRunner.Run(cmd)
 }
 
+// ChangeDirectory will execute `cd {path}` in the current active Tmux pane.
+func (t Tmux) ChangeDirectory(path string) error {
+	args := []string{
+		fmt.Sprintf("tmux -S %s send-keys '%s' Enter", t.socket, path),
+	}
+
+	cmd := exec.Command("bash", "-c", strings.Join(args, " \\; "))
+
+	return t.commandRunner.Run(cmd)
+}
+
 // CommandRunner is used to execute commands on the Tmux session.
 type CommandRunner interface {
 	Run(cmd *exec.Cmd) error
