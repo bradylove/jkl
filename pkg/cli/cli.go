@@ -14,7 +14,7 @@ func Run(args []string) {
 	commands := []command{
 		{
 			name:        "goto",
-			description: "change the current directory of the current tmux pane to the specified project directory",
+			description: "change the current directory of the current tmux pane to the project directory",
 			cmd:         gotoCommand,
 		},
 		{

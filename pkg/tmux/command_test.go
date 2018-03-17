@@ -72,18 +72,20 @@ func TestCommandExecution(t *testing.T) {
 	})
 
 	o.Group("ChangeDirectory", func() {
-		cr := &spyCommandRunner{}
-		tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
+		o.Spec("send keys to change directory to tmux", func(t *testing.T) {
+			cr := &spyCommandRunner{}
+			tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
 
-		err := tm.ChangeDirectory("~/")
-		Expect(t, err).To(Not(HaveOccurred()))
+			err := tm.ChangeDirectory("~/")
+			Expect(t, err).To(Not(HaveOccurred()))
 
-		cmd := cr.runCmds[0]
-		Expect(t, cmd.Args).To(Equal([]string{
-			"bash",
-			"-c",
-			"tmux -S /tmp/tmux-socket send-keys '~/' Enter",
-		}))
+			cmd := cr.runCmds[0]
+			Expect(t, cmd.Args).To(Equal([]string{
+				"bash",
+				"-c",
+				"tmux -S /tmp/tmux-socket send-keys 'cd ~/' Enter",
+			}))
+		})
 	})
 }
 
