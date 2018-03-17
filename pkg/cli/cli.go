@@ -2,6 +2,8 @@ package cli
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/bradylove/jkl/pkg/manifest"
 	cli "github.com/jawher/mow.cli"
@@ -53,7 +55,9 @@ type command struct {
 }
 
 func notImplementedPlan(cmd *cli.Cmd) {
-	cmd.Action = func() { panic("not implemented") }
+	log := log.New(os.Stderr, "", 0)
+
+	cmd.Action = func() { log.Fatal("not implemented") }
 }
 
 func findProject(name string, projects []manifest.Project) (manifest.Project, error) {
