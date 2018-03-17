@@ -43,8 +43,13 @@ func (t Tmux) CreateWindow(name, path string, opts ...CreateWindowOption) error 
 
 // ChangeDirectory will execute `cd {path}` in the current active Tmux pane.
 func (t Tmux) ChangeDirectory(path string) error {
+	return t.Execute(fmt.Sprintf("cd %s", path))
+}
+
+// Execute will execute any given command in the current active Tmux pane.
+func (t Tmux) Execute(cmdStr string) error {
 	args := []string{
-		fmt.Sprintf("tmux -S %s send-keys 'cd %s' Enter", t.socket, path),
+		fmt.Sprintf("tmux -S %s send-keys '%s' Enter", t.socket, cmdStr),
 	}
 
 	cmd := exec.Command("bash", "-c", strings.Join(args, " \\; "))

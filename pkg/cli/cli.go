@@ -13,6 +13,11 @@ func Run(args []string) {
 
 	commands := []command{
 		{
+			name:        "edit",
+			description: "opens the jkl manifest for editing",
+			cmd:         editCommand,
+		},
+		{
 			name:        "goto",
 			description: "change the current directory of the current tmux pane to the project directory",
 			cmd:         gotoCommand,
@@ -21,11 +26,6 @@ func Run(args []string) {
 			name:        "open",
 			description: "(limited) opens one or more projects",
 			cmd:         openCommand,
-		},
-		{
-			name:        "edit",
-			description: "(not implemented) opens the jkl manifest for editing",
-			cmd:         notImplementedPlan,
 		},
 		{
 			name:        "github",

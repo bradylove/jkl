@@ -87,6 +87,23 @@ func TestCommandExecution(t *testing.T) {
 			}))
 		})
 	})
+
+	o.Group("Execute", func() {
+		o.Spec("execute arbitrary commands in tmux pane", func(t *testing.T) {
+			cr := &spyCommandRunner{}
+			tm := tmux.New("/tmp/tmux-socket", tmux.WithCommandRunner(cr))
+
+			err := tm.Execute("echo Hello!")
+			Expect(t, err).To(Not(HaveOccurred()))
+
+			cmd := cr.runCmds[0]
+			Expect(t, cmd.Args).To(Equal([]string{
+				"bash",
+				"-c",
+				"tmux -S /tmp/tmux-socket send-keys 'echo Hello!' Enter",
+			}))
+		})
+	})
 }
 
 type spyCommandRunner struct {
