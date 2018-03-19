@@ -1,7 +1,9 @@
 package manifest
 
 import (
+	"net/url"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -42,5 +44,19 @@ type Project struct {
 	WorkingPath string `yaml:"working_path"`
 	Layout      string `yaml:"layout"`
 	Repository  string `yaml:"repository"`
-	Submodules  bool   `yaml:"submodules"`
+}
+
+// BrowserURL makes a best effort to build a browser URL from the Repository.
+func (p Project) BrowserURL() (string, error) {
+	s := strings.Replace(p.Repository, ":", "/", 1)
+	s = strings.Replace(s, "git@", "", 1)
+
+	u, err := url.Parse(s)
+	if err != nil {
+		return "", err
+	}
+
+	u.Scheme = "https"
+
+	return u.String(), nil
 }

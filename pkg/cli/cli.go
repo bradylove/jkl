@@ -4,16 +4,22 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 
 	"github.com/bradylove/jkl/pkg/manifest"
 	cli "github.com/jawher/mow.cli"
 )
 
 // Run initializes and executes the CLI.
-func Run(args []string) {
+func Run(log Logger, cr CommandRunner, manifest string, args []string) {
 	app := cli.App("jkl", "project management life improver")
 
 	commands := []command{
+		{
+			name:        "browser",
+			description: "(linux only) open the projects page in the browser",
+			cmd:         BrowserCommand(log, cr, manifest),
+		},
 		{
 			name:        "edit",
 			description: "opens the jkl manifest for editing",
@@ -30,11 +36,6 @@ func Run(args []string) {
 			cmd:         openCommand,
 		},
 		{
-			name:        "github",
-			description: "(not implemented) open the projects github page in the browser",
-			cmd:         githubCommand,
-		},
-		{
 			name:        "init",
 			description: "(not implemented) initializes the jkl config file",
 			cmd:         notImplementedPlan,
@@ -46,6 +47,17 @@ func Run(args []string) {
 	}
 
 	app.Run(args)
+}
+
+// CommandRunner is used to execute commands.
+type CommandRunner interface {
+	Run(cmd *exec.Cmd) error
+}
+
+// Logger is the interface used for all output by the CLI.
+type Logger interface {
+	Printf(string, ...interface{})
+	Fatalf(string, ...interface{})
 }
 
 type command struct {

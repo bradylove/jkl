@@ -57,11 +57,6 @@ func (t Tmux) Execute(cmdStr string) error {
 	return t.commandRunner.Run(cmd)
 }
 
-// CommandRunner is used to execute commands on the Tmux session.
-type CommandRunner interface {
-	Run(cmd *exec.Cmd) error
-}
-
 // Option can be used to configure optional settings on a Tmux struct during
 // initialization.
 type Option func(t *Tmux)
@@ -90,6 +85,11 @@ func WithLayout(layout string) CreateWindowOption {
 	return func(args *[]string) {
 		*args = append(*args, fmt.Sprintf("select-layout %s", layout))
 	}
+}
+
+// CommandRunner is used to execute commands on the Tmux session.
+type CommandRunner interface {
+	Run(cmd *exec.Cmd) error
 }
 
 // Runner is the default CommandRunner for Tmux.

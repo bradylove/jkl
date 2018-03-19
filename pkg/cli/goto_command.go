@@ -13,7 +13,7 @@ import (
 
 func gotoCommand(cmd *cli.Cmd) {
 	log := log.New(os.Stderr, "", 0)
-	project := cmd.StringArg("PROJECT", "", "names or aliases of projects to open")
+	project := cmd.StringArg("PROJECT", "", "names or aliases of project to open")
 
 	cmd.Action = func() {
 		tmuxVar := os.Getenv("TMUX")
