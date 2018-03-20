@@ -28,6 +28,7 @@ projects:
   base_path: ~/gocode/src/github.com/bradylove/jkl
   working_path: .
   layout: main-vertical
+  repository: git@github.com:bradylove/jkl.git
 ```
 
 ## Usage
@@ -40,9 +41,10 @@ Usage: jkl COMMAND [arg...]
 project management life improver
 
 Commands:
+  browser      open the projects page in the browser
+  edit         opens the jkl manifest for editing
+  goto         change the current directory of the current tmux pane to the project directory
   open         (limited) opens one or more projects
-  edit         (not implemented) opens the jkl manifest for editing
-  github       (not implemented) open the projects github page in the browser
   init         (not implemented) initializes the jkl config file
 
 Run 'jkl COMMAND --help' for more information on a command.
