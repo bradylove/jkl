@@ -5,20 +5,39 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 
 	"github.com/bradylove/jkl/pkg/manifest"
 	cli "github.com/jawher/mow.cli"
 )
 
+// GOOS is a variable that defaults to the runtime.GOOS constant, however it can
+// be replaced at runtime.
+var GOOS = runtime.GOOS
+
 // Run initializes and executes the CLI.
-func Run(log Logger, cr CommandRunner, manifest string, args []string) {
-	app := cli.App("jkl", "project management life improver")
+func Run(
+	log Logger,
+	cr CommandRunner,
+	manifest string,
+	args []string,
+	opts ...RunOption,
+) {
+	cfg := runConfig{
+		runtimeOS: runtime.GOOS,
+	}
+
+	for _, o := range opts {
+		o(&cfg)
+	}
+
+	app := cli.App("jkl", "developer project management life improver")
 
 	commands := []command{
 		{
 			name:        "browser",
-			description: "(linux only) open the projects page in the browser",
-			cmd:         BrowserCommand(log, cr, manifest),
+			description: "open the projects page in the browser",
+			cmd:         BrowserCommand(log, cr, manifest, cfg.runtimeOS),
 		},
 		{
 			name:        "edit",
@@ -60,10 +79,25 @@ type Logger interface {
 	Fatalf(string, ...interface{})
 }
 
+// RunOption is a function that can be used to configure optional run properties.
+type RunOption func(cfg *runConfig)
+
+// WithRuntimeOS is a RunOption that can be used to set the runtimeOS on the
+// run config. Default value is runtime.GOOS.
+func WithRuntimeOS(os string) RunOption {
+	return func(cfg *runConfig) {
+		cfg.runtimeOS = os
+	}
+}
+
 type command struct {
 	name        string
 	description string
 	cmd         func(cmd *cli.Cmd)
+}
+
+type runConfig struct {
+	runtimeOS string
 }
 
 func notImplementedPlan(cmd *cli.Cmd) {

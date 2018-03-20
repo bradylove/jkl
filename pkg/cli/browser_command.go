@@ -8,10 +8,13 @@ import (
 )
 
 // BrowserCommand is the executor for the top level github command.
-func BrowserCommand(log Logger, cr CommandRunner, manifestPath string) func(*cli.Cmd) {
+func BrowserCommand(
+	log Logger,
+	cr CommandRunner,
+	manifestPath string,
+	runtimeOS string,
+) func(*cli.Cmd) {
 	return func(cmd *cli.Cmd) {
-		cmd.Command("issues", "list github issues for a given project", notImplementedPlan)
-
 		project := cmd.StringArg("PROJECT", "", "name or alias of project to open in browser")
 
 		cmd.Action = func() {
@@ -30,7 +33,12 @@ func BrowserCommand(log Logger, cr CommandRunner, manifestPath string) func(*cli
 				log.Fatalf("failed to build browser URL: %s", err)
 			}
 
-			c := exec.Command("xdg-open", u)
+			bin := "xdg-open"
+			if runtimeOS == "darwin" {
+				bin = "open"
+			}
+
+			c := exec.Command(bin, u)
 			err = cr.Run(c)
 			if err != nil {
 				log.Fatalf("failed to open project in browser: %s", err)

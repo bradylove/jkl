@@ -18,7 +18,7 @@ func editCommand(cmd *cli.Cmd) {
 	cmd.Action = func() {
 		tmuxVar := os.Getenv("TMUX")
 		if tmuxVar == "" {
-			log.Fatalln("jkl goto must be ran in TMUX")
+			log.Fatalln("jkl edit must be ran in TMUX")
 		}
 
 		m, err := manifest.Load(filepath.Join(os.Getenv("HOME"), ".jkl"))
