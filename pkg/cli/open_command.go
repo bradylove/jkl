@@ -39,7 +39,7 @@ func openCommand(cmd *cli.Cmd) {
 			var opts []tmux.CreateWindowOption
 			if p.WorkingPath != "" {
 				opts = append(opts, tmux.WithVerticalSplitPath(
-					filepath.Join(p.BasePath, p.WorkingPath)),
+					filepath.Join(p.Path, p.WorkingPath)),
 				)
 			}
 
@@ -47,7 +47,7 @@ func openCommand(cmd *cli.Cmd) {
 				opts = append(opts, tmux.WithLayout(p.Layout))
 			}
 
-			err = tm.CreateWindow(p.Name, p.BasePath, opts...)
+			err = tm.CreateWindow(p.Name, p.Path, opts...)
 			if err != nil {
 				log.Printf("failed to open project '%s': %s", p.Name, err)
 			}

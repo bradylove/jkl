@@ -73,11 +73,3 @@ func (r *cmdRunner) Run(cmd *exec.Cmd) error {
 	r.commands = append(r.commands, cmd)
 	return r.commandError
 }
-
-var (
-	manifestTemplate = `---
-projects:
-- name: jkl
-  repository: git@github.com:bradylove/jkl.git
-`
-)

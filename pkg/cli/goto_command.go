@@ -32,7 +32,7 @@ func gotoCommand(cmd *cli.Cmd) {
 			log.Fatalf("%s", err)
 		}
 
-		err = tm.ChangeDirectory(p.BasePath)
+		err = tm.ChangeDirectory(p.Path)
 		if err != nil {
 			log.Printf("failed to open project '%s': %s", p.Name, err)
 		}

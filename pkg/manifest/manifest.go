@@ -40,7 +40,7 @@ func Load(path string) (Manifest, error) {
 type Project struct {
 	Name        string `yaml:"name"`
 	Alias       string `yaml:"alias"`
-	BasePath    string `yaml:"base_path"`
+	Path        string `yaml:"path"`
 	WorkingPath string `yaml:"working_path"`
 	Layout      string `yaml:"layout"`
 	Repository  string `yaml:"repository"`

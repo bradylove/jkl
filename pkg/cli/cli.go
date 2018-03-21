@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -10,10 +11,6 @@ import (
 	"github.com/bradylove/jkl/pkg/manifest"
 	cli "github.com/jawher/mow.cli"
 )
-
-// GOOS is a variable that defaults to the runtime.GOOS constant, however it can
-// be replaced at runtime.
-var GOOS = runtime.GOOS
 
 // Run initializes and executes the CLI.
 func Run(
@@ -24,7 +21,8 @@ func Run(
 	opts ...RunOption,
 ) {
 	cfg := runConfig{
-		runtimeOS: runtime.GOOS,
+		runtimeOS:   runtime.GOOS,
+		errorWriter: os.Stderr,
 	}
 
 	for _, o := range opts {
@@ -49,15 +47,16 @@ func Run(
 			description: "change the current directory of the current tmux pane to the project directory",
 			cmd:         gotoCommand,
 		},
+
+		{
+			name:        "projects",
+			description: "list known projects",
+			cmd:         ProjectsCommand(cfg.errorWriter, manifest),
+		},
 		{
 			name:        "open",
 			description: "(limited) opens one or more projects",
 			cmd:         openCommand,
-		},
-		{
-			name:        "init",
-			description: "(not implemented) initializes the jkl config file",
-			cmd:         notImplementedPlan,
 		},
 	}
 
@@ -90,6 +89,14 @@ func WithRuntimeOS(os string) RunOption {
 	}
 }
 
+// WithErrorWriter is a RunOption that can be used to override the io.Writer for
+// errors. Default is os.Stderr.
+func WithErrorWriter(w io.Writer) RunOption {
+	return func(cfg *runConfig) {
+		cfg.errorWriter = w
+	}
+}
+
 type command struct {
 	name        string
 	description string
@@ -97,7 +104,8 @@ type command struct {
 }
 
 type runConfig struct {
-	runtimeOS string
+	runtimeOS   string
+	errorWriter io.Writer
 }
 
 func notImplementedPlan(cmd *cli.Cmd) {
