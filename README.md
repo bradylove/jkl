@@ -26,8 +26,8 @@ editor: code
 projects:
 - name: jkl
   alias: jk
-  base_path: ~/gocode/src/github.com/bradylove/jkl
-  working_path: .
+  path: ~/gocode/src/github.com/bradylove/jkl
+  working_path: cmd/jkl
   layout: main-vertical
   repository: git@github.com:bradylove/jkl.git
 ```
