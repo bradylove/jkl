@@ -15,6 +15,18 @@ func TestCommandExecution(t *testing.T) {
 	o := onpar.New()
 	defer o.Run(t)
 
+	o.Group("Valid", func() {
+		o.Spec("return true with a valid socket", func(t *testing.T) {
+			tm := tmux.New("/tmp/tmux-socket")
+			Expect(t, tm.Valid()).To(BeTrue())
+		})
+
+		o.Spec("return false with a valid socket", func(t *testing.T) {
+			tm := tmux.New("")
+			Expect(t, tm.Valid()).To(BeFalse())
+		})
+	})
+
 	o.Group("CreateWindow", func() {
 		o.Spec("setup a new window for a project", func(t *testing.T) {
 			cr := &spyCommandRunner{}

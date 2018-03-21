@@ -1,8 +1,6 @@
 package cli_test
 
 import (
-	"io/ioutil"
-	"os/exec"
 	"testing"
 
 	"github.com/bradylove/jkl/pkg/cli"
@@ -17,16 +15,7 @@ func TestBrowserCommand(t *testing.T) {
 	defer o.Run(t)
 
 	o.BeforeEach(func(t *testing.T) (*testing.T, string) {
-		f, err := ioutil.TempFile("", "")
-		Expect(t, err).To(Not(HaveOccurred()))
-
-		_, err = f.Write([]byte(manifestTemplate))
-		Expect(t, err).To(Not(HaveOccurred()))
-
-		err = f.Close()
-		Expect(t, err).To(Not(HaveOccurred()))
-
-		return t, f.Name()
+		return t, tempManifest()
 	})
 
 	o.Spec("xdg-open the project in the browser", func(t *testing.T, manifest string) {
@@ -62,14 +51,4 @@ func TestBrowserCommand(t *testing.T) {
 			"https://github.com/bradylove/jkl.git",
 		}))
 	})
-}
-
-type cmdRunner struct {
-	commands     []*exec.Cmd
-	commandError error
-}
-
-func (r *cmdRunner) Run(cmd *exec.Cmd) error {
-	r.commands = append(r.commands, cmd)
-	return r.commandError
 }

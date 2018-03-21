@@ -1,9 +1,14 @@
 package cli_test
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"os/exec"
+)
 
 var (
 	manifestTemplate = `---
+editor: code
 projects:
 - name: simple-file-server
   alias: sfs
@@ -35,4 +40,33 @@ func (nopLogger) Printf(string, ...interface{}) {
 
 func (nopLogger) Fatalf(string, ...interface{}) {
 	panic("not implemented")
+}
+
+type cmdRunner struct {
+	commands     []*exec.Cmd
+	commandError error
+}
+
+func (r *cmdRunner) Run(cmd *exec.Cmd) error {
+	r.commands = append(r.commands, cmd)
+	return r.commandError
+}
+
+func tempManifest() string {
+	f, err := ioutil.TempFile("", "")
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = f.Write([]byte(manifestTemplate))
+	if err != nil {
+		panic(err)
+	}
+
+	err = f.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	return f.Name()
 }

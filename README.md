@@ -1,7 +1,7 @@
 jkl
 ====================================
 
-jkl is a [Tmux][tmux] and [Git][git] focused developer project management tool.
+jkl is a [tmux][tmux] and [Git][git] focused developer project management tool.
 jkl makes it easy to switch from one project in a single command.
 
 **jkl only supports Linux and OSX.**

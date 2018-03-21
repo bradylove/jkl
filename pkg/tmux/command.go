@@ -57,6 +57,16 @@ func (t Tmux) Execute(cmdStr string) error {
 	return t.commandRunner.Run(cmd)
 }
 
+// Valid returns a boolean indicating whether the socket that tmux.Tmux was
+// configured with is valid.
+func (t Tmux) Valid() bool {
+	if t.socket == "" {
+		return false
+	}
+
+	return true
+}
+
 // Option can be used to configure optional settings on a Tmux struct during
 // initialization.
 type Option func(t *Tmux)

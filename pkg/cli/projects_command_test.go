@@ -3,7 +3,6 @@ package cli_test
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"strings"
 	"testing"
 
@@ -19,16 +18,7 @@ func TestProjectsCommand(t *testing.T) {
 	defer o.Run(t)
 
 	o.BeforeEach(func(t *testing.T) (*testing.T, string) {
-		f, err := ioutil.TempFile("", "")
-		Expect(t, err).To(Not(HaveOccurred()))
-
-		_, err = f.Write([]byte(manifestTemplate))
-		Expect(t, err).To(Not(HaveOccurred()))
-
-		err = f.Close()
-		Expect(t, err).To(Not(HaveOccurred()))
-
-		return t, f.Name()
+		return t, tempManifest()
 	})
 
 	o.Spec("print a list of known projects", func(t *testing.T, manifest string) {

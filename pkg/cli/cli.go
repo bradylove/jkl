@@ -6,8 +6,10 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/bradylove/jkl/pkg/manifest"
+	"github.com/bradylove/jkl/pkg/tmux"
 	cli "github.com/jawher/mow.cli"
 )
 
@@ -22,11 +24,16 @@ func Run(
 	cfg := runConfig{
 		runtimeOS:   runtime.GOOS,
 		errorWriter: os.Stderr,
+		tmuxSocket:  defaultTmuxSocket(),
 	}
 
 	for _, o := range opts {
 		o(&cfg)
 	}
+
+	tm := tmux.New(cfg.tmuxSocket,
+		tmux.WithCommandRunner(cr),
+	)
 
 	app := cli.App("jkl", "developer project management life improver")
 
@@ -39,7 +46,7 @@ func Run(
 		{
 			name:        "edit e",
 			description: "open the jkl manifest for editing",
-			cmd:         editCommand,
+			cmd:         EditCommand(log, tm, manifest),
 		},
 		{
 			name:        "goto cd",
@@ -95,6 +102,14 @@ func WithErrorWriter(w io.Writer) RunOption {
 	}
 }
 
+// WithTmuxSocket is a RunOption to override the default tmux socket path.
+// Default is the value of the TMUX environment variable.
+func WithTmuxSocket(s string) RunOption {
+	return func(cfg *runConfig) {
+		cfg.tmuxSocket = s
+	}
+}
+
 type command struct {
 	name        string
 	description string
@@ -103,6 +118,7 @@ type command struct {
 
 type runConfig struct {
 	runtimeOS   string
+	tmuxSocket  string
 	errorWriter io.Writer
 }
 
@@ -114,4 +130,13 @@ func findProject(name string, projects []manifest.Project) (manifest.Project, er
 	}
 
 	return manifest.Project{}, fmt.Errorf("project named %s not found in manifest", name)
+}
+
+func defaultTmuxSocket() string {
+	s := os.Getenv("TMUX")
+	if s == "" {
+		return s
+	}
+
+	return strings.Split(s, ",")[0]
 }
