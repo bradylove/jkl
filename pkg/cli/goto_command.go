@@ -1,40 +1,30 @@
 package cli
 
 import (
-	"log"
-	"os"
-	"path/filepath"
-	"strings"
-
 	"github.com/bradylove/jkl/pkg/manifest"
 	"github.com/bradylove/jkl/pkg/tmux"
 	cli "github.com/jawher/mow.cli"
 )
 
-func gotoCommand(cmd *cli.Cmd) {
-	log := log.New(os.Stderr, "", 0)
-	project := cmd.StringArg("PROJECT", "", "names or aliases of project to open")
+// GoToCommand will cd in to the projects path in the current tmux pane.
+func GoToCommand(log Logger, tm tmux.Tmux, m manifest.Manifest) func(*cli.Cmd) {
+	return func(cmd *cli.Cmd) {
+		project := cmd.StringArg("PROJECT", "", "names or aliases of project to open")
 
-	cmd.Action = func() {
-		tmuxVar := os.Getenv("TMUX")
-		if tmuxVar == "" {
-			log.Fatalln("jkl goto must be ran in TMUX")
-		}
+		cmd.Action = func() {
+			if !tm.Valid() {
+				log.Fatalf("jkl goto must be ran in tmux")
+			}
 
-		m, err := manifest.Load(filepath.Join(os.Getenv("HOME"), ".jkl"))
-		if err != nil {
-			log.Fatalf("failed to read jkl manifest: %s", err)
-		}
+			p, err := m.FindProject(*project)
+			if err != nil {
+				log.Fatalf("%s", err)
+			}
 
-		p, err := m.FindProject(*project)
-		if err != nil {
-			log.Fatalf("%s", err)
-		}
-
-		tm := tmux.New(strings.Split(tmuxVar, ",")[0])
-		err = tm.ChangeDirectory(p.Path)
-		if err != nil {
-			log.Printf("failed to open project '%s': %s", p.Name, err)
+			err = tm.ChangeDirectory(p.Path)
+			if err != nil {
+				log.Fatalf("failed to open project '%s': %s", p.Name, err)
+			}
 		}
 	}
 }

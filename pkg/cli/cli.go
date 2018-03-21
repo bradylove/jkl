@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/bradylove/jkl/pkg/manifest"
 	"github.com/bradylove/jkl/pkg/tmux"
 	cli "github.com/jawher/mow.cli"
 )
@@ -15,7 +16,7 @@ import (
 func Run(
 	log Logger,
 	cr CommandRunner,
-	manifest string,
+	manifestPath string,
 	args []string,
 	opts ...RunOption,
 ) {
@@ -33,28 +34,33 @@ func Run(
 		tmux.WithCommandRunner(cr),
 	)
 
+	m, err := manifest.Load(manifestPath)
+	if err != nil {
+		log.Fatalf("failed to read jkl manifest: %s", err)
+	}
+
 	app := cli.App("jkl", "developer project management life improver")
 
 	commands := []command{
 		{
 			name:        "browser b",
 			description: "open the projects page in the browser",
-			cmd:         BrowserCommand(log, cr, manifest, cfg.runtimeOS),
+			cmd:         BrowserCommand(log, cr, manifestPath, cfg.runtimeOS),
 		},
 		{
 			name:        "edit e",
 			description: "open the jkl manifest for editing",
-			cmd:         EditCommand(log, tm, manifest),
+			cmd:         EditCommand(log, tm, manifestPath),
 		},
 		{
 			name:        "goto cd",
 			description: "change the current directory of the current tmux pane to the project directory",
-			cmd:         gotoCommand,
+			cmd:         GoToCommand(log, tm, m),
 		},
 		{
 			name:        "projects p",
 			description: "list known projects",
-			cmd:         ProjectsCommand(log, cfg.errorWriter, manifest),
+			cmd:         ProjectsCommand(log, cfg.errorWriter, manifestPath),
 		},
 		{
 			name:        "open o",
