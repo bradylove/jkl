@@ -65,7 +65,7 @@ func Run(
 		{
 			name:        "open o",
 			description: "(limited) open one or more projects",
-			cmd:         openCommand,
+			cmd:         OpenCommand(log, tm, m),
 		},
 	}
 

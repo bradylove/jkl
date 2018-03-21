@@ -17,6 +17,12 @@ projects:
 - name: jkl
   repository: git@github.com:bradylove/jkl.git
   path: ~/gocode/src/github.com/bradylove/jkl
+- name: thing-with-working-path
+  alias: wp
+  repository: git@github.com:bradylove/thing-with-working-path.git
+  path: ~/workspace/wp
+  working_path: wp
+  layout: main-vertical
 `
 )
 

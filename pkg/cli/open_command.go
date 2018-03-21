@@ -1,55 +1,46 @@
 package cli
 
 import (
-	"log"
-	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/bradylove/jkl/pkg/manifest"
 	"github.com/bradylove/jkl/pkg/tmux"
 	cli "github.com/jawher/mow.cli"
 )
 
-func openCommand(cmd *cli.Cmd) {
-	log := log.New(os.Stderr, "", 0)
-	projects := cmd.StringsArg("PROJECTS", nil, "names or aliases of projects to open")
+// OpenCommand will open one or more projects in new tmux windows.
+func OpenCommand(log Logger, tm tmux.Tmux, m manifest.Manifest) func(*cli.Cmd) {
+	return func(cmd *cli.Cmd) {
+		projects := cmd.StringsArg("PROJECTS", nil, "names or aliases of projects to open")
 
-	cmd.Spec = "PROJECTS..."
-
-	cmd.Action = func() {
-		tmuxVar := os.Getenv("TMUX")
-		if tmuxVar == "" {
-			log.Fatalln("jkl open must be ran in TMUX")
-		}
-
-		m, err := manifest.Load(filepath.Join(os.Getenv("HOME"), ".jkl"))
-		if err != nil {
-			log.Fatalf("failed to read jkl manifest: %s", err)
-		}
-
-		tm := tmux.New(strings.Split(tmuxVar, ",")[0])
-		for _, name := range *projects {
-			p, err := m.FindProject(name)
-			if err != nil {
-				log.Println(err)
-				continue
+		cmd.Spec = "PROJECTS..."
+		cmd.Action = func() {
+			if !tm.Valid() {
+				log.Fatalf("jkl open must be ran in tmux")
 			}
 
-			var opts []tmux.CreateWindowOption
-			if p.WorkingPath != "" {
-				opts = append(opts, tmux.WithVerticalSplitPath(
-					filepath.Join(p.Path, p.WorkingPath)),
-				)
-			}
+			for _, name := range *projects {
+				p, err := m.FindProject(name)
+				if err != nil {
+					log.Printf("%s", err)
+					continue
+				}
 
-			if p.Layout != "" {
-				opts = append(opts, tmux.WithLayout(p.Layout))
-			}
+				var opts []tmux.CreateWindowOption
+				if p.WorkingPath != "" {
+					opts = append(opts, tmux.WithVerticalSplitPath(
+						filepath.Join(p.Path, p.WorkingPath)),
+					)
+				}
 
-			err = tm.CreateWindow(p.Name, p.Path, opts...)
-			if err != nil {
-				log.Printf("failed to open project '%s': %s", p.Name, err)
+				if p.Layout != "" {
+					opts = append(opts, tmux.WithLayout(p.Layout))
+				}
+
+				err = tm.CreateWindow(p.Name, p.Path, opts...)
+				if err != nil {
+					log.Printf("failed to open project '%s': %s", p.Name, err)
+				}
 			}
 		}
 	}
