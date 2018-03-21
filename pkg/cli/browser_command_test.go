@@ -14,14 +14,10 @@ func TestBrowserCommand(t *testing.T) {
 	o := onpar.New()
 	defer o.Run(t)
 
-	o.BeforeEach(func(t *testing.T) (*testing.T, string) {
-		return t, tempManifest()
-	})
-
-	o.Spec("xdg-open the project in the browser", func(t *testing.T, manifest string) {
+	o.Spec("xdg-open the project in the browser", func(t *testing.T) {
 		cr := &cmdRunner{}
 
-		cli.Run(nopLogger{}, cr, manifest, []string{"jkl", "browser", "jkl"},
+		cli.Run(nopLogger{}, cr, tempManifest(), []string{"jkl", "browser", "jkl"},
 			cli.WithRuntimeOS("linux"),
 		)
 
@@ -35,10 +31,10 @@ func TestBrowserCommand(t *testing.T) {
 		}))
 	})
 
-	o.Spec("open the project in the browser on darwin", func(t *testing.T, manifest string) {
+	o.Spec("open the project in the browser on darwin", func(t *testing.T) {
 		cr := &cmdRunner{}
 
-		cli.Run(nopLogger{}, cr, manifest, []string{"jkl", "browser", "jkl"},
+		cli.Run(nopLogger{}, cr, tempManifest(), []string{"jkl", "browser", "jkl"},
 			cli.WithRuntimeOS("darwin"),
 		)
 
