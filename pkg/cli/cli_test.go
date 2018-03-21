@@ -1,5 +1,7 @@
 package cli_test
 
+import "fmt"
+
 var (
 	manifestTemplate = `---
 projects:
@@ -12,6 +14,18 @@ projects:
   path: ~/gocode/src/github.com/bradylove/jkl
 `
 )
+
+type stubLogger struct {
+	printfMessages []string
+}
+
+func (s *stubLogger) Printf(f string, a ...interface{}) {
+	s.printfMessages = append(s.printfMessages, fmt.Sprintf(f, a...))
+}
+
+func (s *stubLogger) Fatalf(f string, a ...interface{}) {
+	panic(fmt.Sprintf(f, a...))
+}
 
 type nopLogger struct{}
 

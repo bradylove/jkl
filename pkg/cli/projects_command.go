@@ -3,7 +3,6 @@ package cli
 import (
 	"fmt"
 	"io"
-	"log"
 	"sort"
 	"text/tabwriter"
 
@@ -12,7 +11,7 @@ import (
 )
 
 // ProjectsCommand will sort and print all known projects.
-func ProjectsCommand(w io.Writer, manifestPath string) func(*cli.Cmd) {
+func ProjectsCommand(log Logger, w io.Writer, manifestPath string) func(*cli.Cmd) {
 	return func(cmd *cli.Cmd) {
 		cmd.Action = func() {
 			m, err := manifest.Load(manifestPath)

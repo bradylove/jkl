@@ -3,7 +3,6 @@ package cli
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -47,11 +46,10 @@ func Run(
 			description: "change the current directory of the current tmux pane to the project directory",
 			cmd:         gotoCommand,
 		},
-
 		{
 			name:        "projects",
 			description: "list known projects",
-			cmd:         ProjectsCommand(cfg.errorWriter, manifest),
+			cmd:         ProjectsCommand(log, cfg.errorWriter, manifest),
 		},
 		{
 			name:        "open",
@@ -106,12 +104,6 @@ type command struct {
 type runConfig struct {
 	runtimeOS   string
 	errorWriter io.Writer
-}
-
-func notImplementedPlan(cmd *cli.Cmd) {
-	log := log.New(os.Stderr, "", 0)
-
-	cmd.Action = func() { log.Fatal("not implemented") }
 }
 
 func findProject(name string, projects []manifest.Project) (manifest.Project, error) {
