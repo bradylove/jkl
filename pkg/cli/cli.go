@@ -1,14 +1,12 @@
 package cli
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"runtime"
 	"strings"
 
-	"github.com/bradylove/jkl/pkg/manifest"
 	"github.com/bradylove/jkl/pkg/tmux"
 	cli "github.com/jawher/mow.cli"
 )
@@ -120,16 +118,6 @@ type runConfig struct {
 	runtimeOS   string
 	tmuxSocket  string
 	errorWriter io.Writer
-}
-
-func findProject(name string, projects []manifest.Project) (manifest.Project, error) {
-	for _, p := range projects {
-		if p.Name == name || p.Alias == name {
-			return p, nil
-		}
-	}
-
-	return manifest.Project{}, fmt.Errorf("project named %s not found in manifest", name)
 }
 
 func defaultTmuxSocket() string {
