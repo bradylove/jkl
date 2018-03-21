@@ -30,7 +30,7 @@ func openCommand(cmd *cli.Cmd) {
 
 		tm := tmux.New(strings.Split(tmuxVar, ",")[0])
 		for _, name := range *projects {
-			p, err := findProject(name, m.Projects)
+			p, err := m.FindProject(name)
 			if err != nil {
 				log.Println(err)
 				continue

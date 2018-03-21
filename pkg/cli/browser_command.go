@@ -23,7 +23,7 @@ func BrowserCommand(
 				log.Fatalf("failed to read jkl manifest: %s", err)
 			}
 
-			p, err := findProject(*project, m.Projects)
+			p, err := m.FindProject(*project)
 			if err != nil {
 				log.Fatalf("%s", err)
 			}

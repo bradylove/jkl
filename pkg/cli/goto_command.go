@@ -26,12 +26,12 @@ func gotoCommand(cmd *cli.Cmd) {
 			log.Fatalf("failed to read jkl manifest: %s", err)
 		}
 
-		tm := tmux.New(strings.Split(tmuxVar, ",")[0])
-		p, err := findProject(*project, m.Projects)
+		p, err := m.FindProject(*project)
 		if err != nil {
 			log.Fatalf("%s", err)
 		}
 
+		tm := tmux.New(strings.Split(tmuxVar, ",")[0])
 		err = tm.ChangeDirectory(p.Path)
 		if err != nil {
 			log.Printf("failed to open project '%s': %s", p.Name, err)

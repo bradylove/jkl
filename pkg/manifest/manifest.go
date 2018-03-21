@@ -1,11 +1,18 @@
 package manifest
 
 import (
+	"errors"
 	"net/url"
 	"os"
 	"strings"
 
 	"gopkg.in/yaml.v2"
+)
+
+var (
+	// ErrProjectNotFound indicates the Manifest was unable to find a given
+	// project.
+	ErrProjectNotFound = errors.New("project not found")
 )
 
 // Manifest defines the structure for the jkl YAML configuration file.
@@ -34,6 +41,17 @@ func Load(path string) (Manifest, error) {
 	}
 
 	return m, nil
+}
+
+// FindProject will return the first project found with a matching name or alias.
+func (m Manifest) FindProject(name string) (Project, error) {
+	for _, p := range m.Projects {
+		if p.Name == name || p.Alias == name {
+			return p, nil
+		}
+	}
+
+	return Project{}, ErrProjectNotFound
 }
 
 // Project defines the YAML configuration for a single project.
