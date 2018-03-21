@@ -22,6 +22,7 @@ go get -u github.com/bradylove/jkl/cmd/jkl
 
 ``` yaml
 ---
+editor: code
 projects:
 - name: jkl
   alias: jk
@@ -38,14 +39,14 @@ $ jkl --help
 
 Usage: jkl COMMAND [arg...]
 
-project management life improver
+developer project management life improver
 
 Commands:
-  browser      open the projects page in the browser
-  edit         opens the jkl manifest for editing
-  goto         change the current directory of the current tmux pane to the project directory
-  open         (limited) opens one or more projects
-  init         (not implemented) initializes the jkl config file
+  browser, b    open the projects page in the browser
+  edit, e       open the jkl manifest for editing
+  goto, cd      change the current directory of the current tmux pane to the project directory
+  projects, p   list known projects
+  open, o       (limited) open one or more projects
 
 Run 'jkl COMMAND --help' for more information on a command.
 ```
