@@ -32,27 +32,27 @@ func Run(
 
 	commands := []command{
 		{
-			name:        "browser",
+			name:        "browser b",
 			description: "open the projects page in the browser",
 			cmd:         BrowserCommand(log, cr, manifest, cfg.runtimeOS),
 		},
 		{
-			name:        "edit",
+			name:        "edit e",
 			description: "open the jkl manifest for editing",
 			cmd:         editCommand,
 		},
 		{
-			name:        "goto",
+			name:        "goto cd",
 			description: "change the current directory of the current tmux pane to the project directory",
 			cmd:         gotoCommand,
 		},
 		{
-			name:        "projects",
+			name:        "projects p",
 			description: "list known projects",
 			cmd:         ProjectsCommand(log, cfg.errorWriter, manifest),
 		},
 		{
-			name:        "open",
+			name:        "open o",
 			description: "(limited) open one or more projects",
 			cmd:         openCommand,
 		},
