@@ -2,7 +2,7 @@ jkl
 ====================================
 
 jkl is a [tmux][tmux] and [Git][git] focused developer project management tool.
-jkl makes it easy to switch from one project in a single command.
+jkl makes it easy to switch from one project to another in a single command.
 
 **jkl only supports Linux and OSX.**
 
@@ -49,10 +49,6 @@ Commands:
   open, o       (limited) open one or more projects
 
 Run 'jkl COMMAND --help' for more information on a command.
-```
-
-```
-$ jkl open jkl
 ```
 
 ## Running Tests
