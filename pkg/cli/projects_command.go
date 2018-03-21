@@ -42,5 +42,5 @@ func ProjectsCommand(log Logger, w io.Writer, manifestPath string) func(*cli.Cmd
 type SortableProjects []manifest.Project
 
 func (s SortableProjects) Len() int               { return len(s) }
-func (s SortableProjects) Less(i int, j int) bool { return s[i].Name > s[j].Name }
+func (s SortableProjects) Less(i int, j int) bool { return s[i].Name < s[j].Name }
 func (s SortableProjects) Swap(i int, j int)      { s[i], s[j] = s[j], s[i] }

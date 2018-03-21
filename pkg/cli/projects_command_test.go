@@ -29,8 +29,8 @@ func TestProjectsCommand(t *testing.T) {
 
 		Expect(t, strings.Split(buf.String(), "\n")).To(Equal([]string{
 			"NAME                ALIAS  PATH",
-			"simple-file-server  sfs    ~/gocode/src/github.com/bradylove/sfs",
 			"jkl                        ~/gocode/src/github.com/bradylove/jkl",
+			"simple-file-server  sfs    ~/gocode/src/github.com/bradylove/sfs",
 			"",
 		}))
 	})
