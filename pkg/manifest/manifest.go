@@ -17,6 +17,7 @@ var (
 
 // Manifest defines the structure for the jkl YAML configuration file.
 type Manifest struct {
+	Path     string
 	Editor   string    `yaml:"editor"`
 	Projects []Project `yaml:"projects,flow"`
 }
@@ -33,6 +34,7 @@ func Load(path string) (Manifest, error) {
 	defer f.Close()
 
 	m := Manifest{
+		Path:   path,
 		Editor: os.Getenv("EDITOR"),
 	}
 	err = yaml.NewDecoder(f).Decode(&m)

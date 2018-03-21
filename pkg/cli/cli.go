@@ -45,12 +45,12 @@ func Run(
 		{
 			name:        "browser b",
 			description: "open the projects page in the browser",
-			cmd:         BrowserCommand(log, cr, manifestPath, cfg.runtimeOS),
+			cmd:         BrowserCommand(log, cr, m, cfg.runtimeOS),
 		},
 		{
 			name:        "edit e",
 			description: "open the jkl manifest for editing",
-			cmd:         EditCommand(log, tm, manifestPath),
+			cmd:         EditCommand(log, tm, m),
 		},
 		{
 			name:        "goto cd",
@@ -60,7 +60,7 @@ func Run(
 		{
 			name:        "projects p",
 			description: "list known projects",
-			cmd:         ProjectsCommand(log, cfg.errorWriter, manifestPath),
+			cmd:         ProjectsCommand(log, cfg.errorWriter, m),
 		},
 		{
 			name:        "open o",

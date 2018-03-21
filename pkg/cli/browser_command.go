@@ -11,18 +11,13 @@ import (
 func BrowserCommand(
 	log Logger,
 	cr CommandRunner,
-	manifestPath string,
+	m manifest.Manifest,
 	runtimeOS string,
 ) func(*cli.Cmd) {
 	return func(cmd *cli.Cmd) {
 		project := cmd.StringArg("PROJECT", "", "name or alias of project to open in browser")
 
 		cmd.Action = func() {
-			m, err := manifest.Load(manifestPath)
-			if err != nil {
-				log.Fatalf("failed to read jkl manifest: %s", err)
-			}
-
 			p, err := m.FindProject(*project)
 			if err != nil {
 				log.Fatalf("%s", err)

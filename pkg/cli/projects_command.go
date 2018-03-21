@@ -11,14 +11,9 @@ import (
 )
 
 // ProjectsCommand will sort and print all known projects.
-func ProjectsCommand(log Logger, w io.Writer, manifestPath string) func(*cli.Cmd) {
+func ProjectsCommand(log Logger, w io.Writer, m manifest.Manifest) func(*cli.Cmd) {
 	return func(cmd *cli.Cmd) {
 		cmd.Action = func() {
-			m, err := manifest.Load(manifestPath)
-			if err != nil {
-				log.Fatalf("failed to read jkl manifest: %s", err)
-			}
-
 			projects := m.Projects
 			sort.Sort(SortableProjects(projects))
 

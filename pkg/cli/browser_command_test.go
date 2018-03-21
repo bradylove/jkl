@@ -1,6 +1,7 @@
 package cli_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/bradylove/jkl/pkg/cli"
@@ -46,5 +47,19 @@ func TestBrowserCommand(t *testing.T) {
 			"open",
 			"https://github.com/bradylove/jkl.git",
 		}))
+	})
+
+	o.Spec("fatally log if project is not found", func(t *testing.T) {
+		defer func() {
+			err := recover()
+			Expect(t, fmt.Sprint(err)).To(Equal("project not found"))
+		}()
+
+		cli.Run(
+			&stubLogger{},
+			&cmdRunner{},
+			tempManifest(),
+			[]string{"jkl", "browser", "unknown"},
+		)
 	})
 }
