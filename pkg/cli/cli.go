@@ -38,7 +38,7 @@ func Run(
 		},
 		{
 			name:        "edit",
-			description: "opens the jkl manifest for editing",
+			description: "open the jkl manifest for editing",
 			cmd:         editCommand,
 		},
 		{
@@ -53,7 +53,7 @@ func Run(
 		},
 		{
 			name:        "open",
-			description: "(limited) opens one or more projects",
+			description: "(limited) open one or more projects",
 			cmd:         openCommand,
 		},
 	}
