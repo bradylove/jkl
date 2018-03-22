@@ -26,6 +26,11 @@ func TestOpenCommand(t *testing.T) {
 			"bash", "-c",
 			"tmux -S /tmp/tmux new-window -n jkl -c ~/gocode/src/github.com/bradylove/jkl",
 		}))
+
+		Expect(t, cr.commands[1].Args).To(Equal([]string{
+			"bash", "-c",
+			"tmux -S /tmp/tmux send-keys 'code .' Enter",
+		}))
 	})
 
 	o.Spec("launch more than one project in tmux", func(t *testing.T) {
@@ -42,7 +47,17 @@ func TestOpenCommand(t *testing.T) {
 
 		Expect(t, cr.commands[1].Args).To(Equal([]string{
 			"bash", "-c",
+			"tmux -S /tmp/tmux send-keys 'code .' Enter",
+		}))
+
+		Expect(t, cr.commands[2].Args).To(Equal([]string{
+			"bash", "-c",
 			"tmux -S /tmp/tmux new-window -n simple-file-server -c ~/gocode/src/github.com/bradylove/sfs",
+		}))
+
+		Expect(t, cr.commands[3].Args).To(Equal([]string{
+			"bash", "-c",
+			"tmux -S /tmp/tmux send-keys 'code .' Enter",
 		}))
 	})
 

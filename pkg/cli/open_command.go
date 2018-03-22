@@ -9,7 +9,11 @@ import (
 )
 
 // OpenCommand will open one or more projects in new tmux windows.
-func OpenCommand(log Logger, tm tmux.Tmux, m manifest.Manifest) func(*cli.Cmd) {
+func OpenCommand(
+	log Logger,
+	tm tmux.Tmux,
+	m manifest.Manifest,
+) func(*cli.Cmd) {
 	return func(cmd *cli.Cmd) {
 		projects := cmd.StringsArg("PROJECTS", nil, "names or aliases of projects to open")
 
@@ -40,6 +44,11 @@ func OpenCommand(log Logger, tm tmux.Tmux, m manifest.Manifest) func(*cli.Cmd) {
 				err = tm.CreateWindow(p.Name, p.Path, opts...)
 				if err != nil {
 					log.Printf("failed to open project '%s': %s", p.Name, err)
+				}
+
+				err = tm.Execute((m.Editor + " ."))
+				if err != nil {
+					log.Printf("failed to open editor: %s", err)
 				}
 			}
 		}
