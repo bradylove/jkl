@@ -18,7 +18,7 @@ func OpenCommand(
 		projects := cmd.StringsArg("PROJECTS", nil, "names or aliases of projects to open")
 		noEdit := cmd.BoolOpt("no-edit n", false, "do not launch editor")
 
-		cmd.Spec = "[-n] PROJECTS..."
+		cmd.Spec = "[OPTIONS] PROJECTS..."
 
 		cmd.Action = func() {
 			if !tm.Valid() {
