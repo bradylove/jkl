@@ -22,6 +22,7 @@ func TestOpenCommand(t *testing.T) {
 			cli.WithTmuxSocket("/tmp/tmux"),
 		)
 
+		Expect(t, cr.commands).To(HaveLen(2))
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
 			"bash", "-c",
 			"tmux -S /tmp/tmux new-window -n jkl -c ~/gocode/src/github.com/bradylove/jkl",
@@ -40,6 +41,7 @@ func TestOpenCommand(t *testing.T) {
 			cli.WithTmuxSocket("/tmp/tmux"),
 		)
 
+		Expect(t, cr.commands).To(HaveLen(4))
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
 			"bash", "-c",
 			"tmux -S /tmp/tmux new-window -n jkl -c ~/gocode/src/github.com/bradylove/jkl",
@@ -58,6 +60,20 @@ func TestOpenCommand(t *testing.T) {
 		Expect(t, cr.commands[3].Args).To(Equal([]string{
 			"bash", "-c",
 			"tmux -S /tmp/tmux send-keys 'code .' Enter",
+		}))
+	})
+
+	o.Spec("do not open editor with no-edit flag", func(t *testing.T) {
+		cr := &cmdRunner{}
+
+		cli.Run(&stubLogger{}, cr, tempManifest(), []string{"jkl", "open", "--no-edit", "jkl"},
+			cli.WithTmuxSocket("/tmp/tmux"),
+		)
+
+		Expect(t, cr.commands).To(HaveLen(1))
+		Expect(t, cr.commands[0].Args).To(Equal([]string{
+			"bash", "-c",
+			"tmux -S /tmp/tmux new-window -n jkl -c ~/gocode/src/github.com/bradylove/jkl",
 		}))
 	})
 

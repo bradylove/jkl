@@ -16,8 +16,10 @@ func OpenCommand(
 ) func(*cli.Cmd) {
 	return func(cmd *cli.Cmd) {
 		projects := cmd.StringsArg("PROJECTS", nil, "names or aliases of projects to open")
+		noEdit := cmd.BoolOpt("no-edit n", false, "do not launch editor")
 
-		cmd.Spec = "PROJECTS..."
+		cmd.Spec = "[-n] PROJECTS..."
+
 		cmd.Action = func() {
 			if !tm.Valid() {
 				log.Fatalf("jkl open must be ran in tmux")
@@ -46,9 +48,11 @@ func OpenCommand(
 					log.Printf("failed to open project '%s': %s", p.Name, err)
 				}
 
-				err = tm.Execute((m.Editor + " ."))
-				if err != nil {
-					log.Printf("failed to open editor: %s", err)
+				if !*noEdit {
+					err = tm.Execute((m.Editor + " ."))
+					if err != nil {
+						log.Printf("failed to open editor: %s", err)
+					}
 				}
 			}
 		}
