@@ -48,6 +48,11 @@ func Run(
 			cmd:         BrowserCommand(log, cr, m, cfg.runtimeOS),
 		},
 		{
+			name:        "clone c",
+			description: "clone the project to the projects path",
+			cmd:         CloneCommand(cr, m),
+		},
+		{
 			name:        "edit e",
 			description: "open the jkl manifest for editing",
 			cmd:         EditCommand(log, tm, m),
@@ -58,14 +63,14 @@ func Run(
 			cmd:         GoToCommand(log, tm, m),
 		},
 		{
+			name:        "open o",
+			description: "open one or more projects",
+			cmd:         OpenCommand(log, tm, m),
+		},
+		{
 			name:        "projects p",
 			description: "list known projects",
 			cmd:         ProjectsCommand(log, cfg.errorWriter, m),
-		},
-		{
-			name:        "open o",
-			description: "(limited) open one or more projects",
-			cmd:         OpenCommand(log, tm, m),
 		},
 	}
 
