@@ -3,6 +3,7 @@ package cli_test
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 )
 
@@ -13,16 +14,20 @@ projects:
 - name: simple-file-server
   alias: sfs
   repository: git@github.com:bradylove/sfs.git
-  path: ~/gocode/src/github.com/bradylove/sfs
+  path: /tmp/sfs
 - name: jkl
   repository: git@github.com:bradylove/jkl.git
-  path: ~/gocode/src/github.com/bradylove/jkl
+  path: /tmp/jkl
 - name: thing-with-working-path
   alias: wp
   repository: git@github.com:bradylove/thing-with-working-path.git
-  path: ~/workspace/wp
+  path: /tmp/wp
   working_path: wp
   layout: main-vertical
+- name: non-existent
+  alias: ne
+  repository: git@github.com:bradylove/non-existent.git
+  path: /tmp/non-existent-directory
 `
 )
 
@@ -40,13 +45,8 @@ func (s *stubLogger) Fatalf(f string, a ...interface{}) {
 
 type nopLogger struct{}
 
-func (nopLogger) Printf(string, ...interface{}) {
-	panic("not implemented")
-}
-
-func (nopLogger) Fatalf(string, ...interface{}) {
-	panic("not implemented")
-}
+func (nopLogger) Printf(string, ...interface{}) {}
+func (nopLogger) Fatalf(string, ...interface{}) {}
 
 type cmdRunner struct {
 	commands     []*exec.Cmd
@@ -59,6 +59,10 @@ func (r *cmdRunner) Run(cmd *exec.Cmd) error {
 }
 
 func tempManifest() string {
+	os.Mkdir("/tmp/jkl", os.ModePerm)
+	os.Mkdir("/tmp/sfs", os.ModePerm)
+	os.Mkdir("/tmp/wp", os.ModePerm)
+
 	f, err := ioutil.TempFile("", "")
 	if err != nil {
 		panic(err)

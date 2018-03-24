@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/bradylove/jkl/pkg/manifest"
@@ -32,6 +33,10 @@ func OpenCommand(
 					continue
 				}
 
+				if directoryNotExists(p.Path) {
+					log.Fatalf("project directory for %s does not exist", p.Name)
+				}
+
 				var opts []tmux.CreateWindowOption
 				if p.WorkingPath != "" {
 					opts = append(opts, tmux.WithVerticalSplitPath(
@@ -57,4 +62,10 @@ func OpenCommand(
 			}
 		}
 	}
+}
+
+func directoryNotExists(path string) bool {
+	_, err := os.Stat(path)
+
+	return os.IsNotExist(err)
 }

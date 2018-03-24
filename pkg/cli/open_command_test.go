@@ -25,7 +25,7 @@ func TestOpenCommand(t *testing.T) {
 		Expect(t, cr.commands).To(HaveLen(2))
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
 			"bash", "-c",
-			"tmux -S /tmp/tmux new-window -n jkl -c ~/gocode/src/github.com/bradylove/jkl",
+			"tmux -S /tmp/tmux new-window -n jkl -c /tmp/jkl",
 		}))
 
 		Expect(t, cr.commands[1].Args).To(Equal([]string{
@@ -44,7 +44,7 @@ func TestOpenCommand(t *testing.T) {
 		Expect(t, cr.commands).To(HaveLen(4))
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
 			"bash", "-c",
-			"tmux -S /tmp/tmux new-window -n jkl -c ~/gocode/src/github.com/bradylove/jkl",
+			"tmux -S /tmp/tmux new-window -n jkl -c /tmp/jkl",
 		}))
 
 		Expect(t, cr.commands[1].Args).To(Equal([]string{
@@ -54,13 +54,26 @@ func TestOpenCommand(t *testing.T) {
 
 		Expect(t, cr.commands[2].Args).To(Equal([]string{
 			"bash", "-c",
-			"tmux -S /tmp/tmux new-window -n simple-file-server -c ~/gocode/src/github.com/bradylove/sfs",
+			"tmux -S /tmp/tmux new-window -n simple-file-server -c /tmp/sfs",
 		}))
 
 		Expect(t, cr.commands[3].Args).To(Equal([]string{
 			"bash", "-c",
 			"tmux -S /tmp/tmux send-keys 'code .' Enter",
 		}))
+	})
+
+	o.Spec("fatally exits if the project directory does not exist", func(t *testing.T) {
+		defer func() {
+			err := recover()
+			Expect(t, fmt.Sprint(err)).To(Equal(
+				"project directory for non-existent does not exist",
+			))
+		}()
+
+		cli.Run(&stubLogger{}, &cmdRunner{}, tempManifest(), []string{"jkl", "open", "ne"},
+			cli.WithTmuxSocket("/tmp/tmux"),
+		)
 	})
 
 	o.Spec("do not open editor with no-edit flag", func(t *testing.T) {
@@ -73,8 +86,9 @@ func TestOpenCommand(t *testing.T) {
 		Expect(t, cr.commands).To(HaveLen(1))
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
 			"bash", "-c",
-			"tmux -S /tmp/tmux new-window -n jkl -c ~/gocode/src/github.com/bradylove/jkl",
+			"tmux -S /tmp/tmux new-window -n jkl -c /tmp/jkl",
 		}))
+
 	})
 
 	o.Spec("open a split if working path and layout are not empty", func(t *testing.T) {
@@ -86,8 +100,8 @@ func TestOpenCommand(t *testing.T) {
 
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
 			"bash", "-c",
-			"tmux -S /tmp/tmux new-window -n thing-with-working-path -c ~/workspace/wp \\; " +
-				"split-window -h -c ~/workspace/wp/wp \\; " +
+			"tmux -S /tmp/tmux new-window -n thing-with-working-path -c /tmp/wp \\; " +
+				"split-window -h -c /tmp/wp/wp \\; " +
 				"select-layout main-vertical",
 		}))
 	})

@@ -24,7 +24,7 @@ func TestGoToCommand(t *testing.T) {
 
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
 			"bash", "-c",
-			"tmux -S /tmp/tmux send-keys 'cd ~/gocode/src/github.com/bradylove/jkl' Enter",
+			"tmux -S /tmp/tmux send-keys 'cd /tmp/jkl' Enter",
 		}))
 	})
 
