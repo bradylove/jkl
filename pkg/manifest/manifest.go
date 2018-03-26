@@ -42,6 +42,13 @@ func Load(path string) (Manifest, error) {
 		return Manifest{}, err
 	}
 
+	for i, p := range m.Projects {
+		if strings.HasPrefix(p.Path, "~/") {
+			p.Path = strings.Replace(p.Path, "~/", os.Getenv("HOME")+"/", 1)
+			m.Projects[i] = p
+		}
+	}
+
 	return m, nil
 }
 

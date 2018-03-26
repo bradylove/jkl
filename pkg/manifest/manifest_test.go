@@ -1,6 +1,8 @@
 package manifest_test
 
 import (
+	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/bradylove/jkl/pkg/manifest"
@@ -13,6 +15,24 @@ import (
 func TestManifest(t *testing.T) {
 	o := onpar.New()
 	defer o.Run(t)
+
+	o.Group("Load", func() {
+		o.Spec("replace ~/ with users home directory", func(t *testing.T) {
+			m, err := manifest.Load(tempManifest())
+			Expect(t, err).To(Not(HaveOccurred()))
+
+			var p manifest.Project
+			for _, project := range m.Projects {
+				if project.Name == "jkl" {
+					p = project
+					break
+				}
+			}
+
+			Expect(t, p.Name).To(Equal("jkl"))
+			Expect(t, p.Path).To(Equal(os.Getenv("HOME") + "/jkl"))
+		})
+	})
 
 	o.Group("FindProject", func() {
 		o.Spec("return project with matching name", func(t *testing.T) {
@@ -53,4 +73,37 @@ func TestManifest(t *testing.T) {
 			Expect(t, p).To(Equal(manifest.Project{}))
 		})
 	})
+}
+
+var (
+	manifestTemplate = `---
+editor: code
+projects:
+- name: simple-file-server
+  alias: sfs
+  repository: git@github.com:bradylove/sfs.git
+  path: /tmp/sfs
+- name: jkl
+  repository: git@github.com:bradylove/jkl.git
+  path: ~/jkl
+`
+)
+
+func tempManifest() string {
+	f, err := ioutil.TempFile("", "")
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = f.Write([]byte(manifestTemplate))
+	if err != nil {
+		panic(err)
+	}
+
+	err = f.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	return f.Name()
 }
