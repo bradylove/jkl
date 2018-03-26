@@ -19,6 +19,9 @@ go get -u github.com/bradylove/jkl/cmd/jkl
 
 ## Manifest
 
+The manifest for jkl is written in `yaml`. The manifest should be placed in your
+users home directory with the filename `.jkl` (`$HOME/.jkl`).
+
 ### Root
 
 | Field          | Description                                                                           |
