@@ -19,7 +19,8 @@ func TestCloneCommand(t *testing.T) {
 		cli.Run(&stubLogger{}, cr, tempManifest(), []string{"jkl", "clone", "jkl"})
 
 		Expect(t, cr.commands[0].Args).To(Equal([]string{
-			"git", "clone", "git@github.com:bradylove/jkl.git", "/tmp/jkl",
+			"bash", "-c",
+			"git clone git@github.com:bradylove/jkl.git /tmp/jkl",
 		}))
 	})
 }

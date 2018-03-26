@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -20,7 +21,10 @@ func CloneCommand(cr CommandRunner, m manifest.Manifest) func(*cli.Cmd) {
 				log.Fatalf("%s", err)
 			}
 
-			c := exec.Command("git", "clone", p.Repository, p.Path)
+			c := exec.Command(
+				"bash", "-c",
+				fmt.Sprintf("git clone %s %s", p.Repository, p.Path),
+			)
 			c.Stdout = os.Stdout
 			c.Stderr = os.Stderr
 			c.Stdin = os.Stdin
