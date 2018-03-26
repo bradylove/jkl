@@ -17,18 +17,38 @@ No reason really other than it is short, quick and easy to type.
 go get -u github.com/bradylove/jkl/cmd/jkl
 ```
 
-## Example Configuration
+## Manifest
+
+### Root
+
+| Field          | Description                                                                           |
+|---------------:|---------------------------------------------------------------------------------------|
+| **`projects`** | Array of [projects](#project)                                                         |
+| **`editor`**   | (Optional) Overrides the editor to use. Defaults to the `EDITOR` environment variable |
+
+### Project
+
+| Field              | Description                                                                                        |
+|-------------------:|----------------------------------------------------------------------------------------------------|
+| **`name`**         | The full name of the project. This name can be used as the `PROJECT` argument for any jkl commands |
+| **`path`**         | The filepath of the project                                                                        |
+| **`respository`**  | The remote git repository for the project                                                          |
+| **`alias`**        | (Optional) Alias for the project. This can be used as the `PROJECT` argument for any jkl commands  |
+| **`layout`**       | (Optional) tmux layout                                                                             |
+| **`working_path`** | (Optional) Path to open editor if different from `path`. Relative to `path`                        |
+
+### Example
 
 ``` yaml
 ---
 editor: code
 projects:
 - name: jkl
-  alias: jk
-  path: ~/gocode/src/github.com/bradylove/jkl
-  working_path: cmd/jkl
-  layout: main-vertical
   repository: git@github.com:bradylove/jkl.git
+  path: ~/gocode/src/github.com/bradylove/jkl
+  alias: jk
+  layout: main-vertical
+  working_path: cmd/jkl
 ```
 
 ## Usage
