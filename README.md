@@ -7,7 +7,7 @@ jkl is a [tmux][tmux] and [Git][git] focused project navigation tool.
 
 ## Why is it named jkl?
 
-No reason really other than it is short, quick and easy to type.
+No reason really other than it is quick and easy to type.
 
 ## Installation
 
