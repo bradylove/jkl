@@ -33,13 +33,16 @@ func Load(path string) (Manifest, error) {
 	}
 	defer f.Close()
 
-	m := Manifest{
-		Path:   path,
-		Editor: os.Getenv("EDITOR"),
-	}
+	var m Manifest
 	err = yaml.NewDecoder(f).Decode(&m)
 	if err != nil {
 		return Manifest{}, err
+	}
+
+	m.Path = path
+
+	if m.Editor == "" {
+		m.Editor = os.Getenv("EDITOR")
 	}
 
 	for i, p := range m.Projects {

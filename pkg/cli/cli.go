@@ -2,6 +2,7 @@ package cli
 
 import (
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"runtime"
@@ -33,6 +34,15 @@ func Run(
 	tm := tmux.New(cfg.tmuxSocket,
 		tmux.WithCommandRunner(cr),
 	)
+
+	if fileNotExists(manifestPath) {
+		err := ioutil.WriteFile(manifestPath, []byte(manifestTemplate), 0664)
+		if err != nil {
+			log.Fatalf("failed to create jkl manifest: %s", err)
+		}
+
+		log.Printf("example manifest created at %s", manifestPath)
+	}
 
 	m, err := manifest.Load(manifestPath)
 	if err != nil {
@@ -118,6 +128,14 @@ func WithTmuxSocket(s string) RunOption {
 		cfg.tmuxSocket = s
 	}
 }
+
+var manifestTemplate = `---
+# editor: vim
+# projects:
+# - name: jkl
+#   path: ~/gocode/src/github.com/bradylove/jkl
+#   repository: git@github.com:bradylove/jkl.git
+`
 
 type command struct {
 	name        string

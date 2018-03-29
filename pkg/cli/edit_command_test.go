@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/bradylove/jkl/pkg/cli"
@@ -30,17 +31,6 @@ func TestEditCommand(t *testing.T) {
 		}))
 	})
 
-	o.Spec("fatally log if loading manifest fails", func(t *testing.T) {
-		defer func() {
-			err := recover()
-			Expect(t, fmt.Sprint(err)).To(Equal("failed to read jkl manifest: open /tmp/unknown: no such file or directory"))
-		}()
-
-		cli.Run(&stubLogger{}, &cmdRunner{}, "/tmp/unknown", []string{"jkl", "edit"},
-			cli.WithTmuxSocket("/tmp/tmux"),
-		)
-	})
-
 	o.Spec("fatally log if TMUX environment variable is not set", func(t *testing.T) {
 		defer func() {
 			err := recover()
@@ -50,5 +40,21 @@ func TestEditCommand(t *testing.T) {
 		cli.Run(&stubLogger{}, &cmdRunner{}, tempManifest(), []string{"jkl", "edit"},
 			cli.WithTmuxSocket(""),
 		)
+	})
+
+	o.Spec("create file with template if not exist", func(t *testing.T) {
+		filePath := "/tmp/jkl-temp-manifest.yml"
+
+		defer func() {
+			os.Remove(filePath)
+		}()
+
+		cr := &cmdRunner{}
+		cli.Run(&stubLogger{}, cr, filePath, []string{"jkl", "edit"},
+			cli.WithTmuxSocket("/tmp/tmux"),
+		)
+
+		_, err := os.Stat(filePath)
+		Expect(t, err).To(Not(HaveOccurred()))
 	})
 }

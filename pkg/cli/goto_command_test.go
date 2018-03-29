@@ -45,6 +45,8 @@ func TestGoToCommand(t *testing.T) {
 			Expect(t, fmt.Sprint(err)).To(Equal("project not found"))
 		}()
 
-		cli.Run(&stubLogger{}, &cmdRunner{}, tempManifest(), []string{"jkl", "goto", "unknown"})
+		cli.Run(&stubLogger{}, &cmdRunner{}, tempManifest(), []string{"jkl", "goto", "unknown"},
+			cli.WithTmuxSocket("/tmp/tmux"),
+		)
 	})
 }

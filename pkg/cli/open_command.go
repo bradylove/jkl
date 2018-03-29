@@ -33,7 +33,7 @@ func OpenCommand(
 					continue
 				}
 
-				if directoryNotExists(p.Path) {
+				if fileNotExists(p.Path) {
 					log.Fatalf("project directory for %s does not exist", p.Name)
 				}
 
@@ -64,7 +64,7 @@ func OpenCommand(
 	}
 }
 
-func directoryNotExists(path string) bool {
+func fileNotExists(path string) bool {
 	_, err := os.Stat(path)
 
 	return os.IsNotExist(err)

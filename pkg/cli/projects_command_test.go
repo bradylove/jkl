@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"bytes"
-	"fmt"
 	"strings"
 	"testing"
 
@@ -35,15 +34,5 @@ func TestProjectsCommand(t *testing.T) {
 			"thing-with-working-path  wp     /tmp/wp",
 			"",
 		}))
-	})
-
-	o.Spec("fatally log when loading manifest fails", func(t *testing.T, _ string) {
-		defer func() {
-			err := recover()
-			Expect(t, fmt.Sprint(err)).To(Equal("failed to read jkl manifest: open /tmp/unknown: no such file or directory"))
-		}()
-
-		loggr := &stubLogger{}
-		cli.Run(loggr, nil, "/tmp/unknown", []string{"jkl", "projects"})
 	})
 }
