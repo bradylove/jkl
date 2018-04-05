@@ -50,6 +50,29 @@ func Run(
 	}
 
 	app := cli.App("jkl", "developer project management life improver")
+	project := app.StringArg("PROJECT", "", "name or alias of project to goto")
+	app.Spec = "[PROJECT]"
+
+	app.Action = func() {
+		if *project == "" {
+			app.PrintHelp()
+			cli.Exit(1)
+		}
+
+		if !tm.Valid() {
+			log.Fatalf("jkl goto must be ran in tmux")
+		}
+
+		p, err := m.FindProject(*project)
+		if err != nil {
+			log.Fatalf("%s", err)
+		}
+
+		err = tm.ChangeDirectory(p.Path)
+		if err != nil {
+			log.Fatalf("failed to open project '%s': %s", p.Name, err)
+		}
+	}
 
 	commands := []command{
 		{

@@ -9,7 +9,7 @@ import (
 // GoToCommand will cd in to the projects path in the current tmux pane.
 func GoToCommand(log Logger, tm tmux.Tmux, m manifest.Manifest) func(*cli.Cmd) {
 	return func(cmd *cli.Cmd) {
-		project := cmd.StringArg("PROJECT", "", "names or aliases of project to open")
+		project := cmd.StringArg("PROJECT", "", "name or alias of project to goto")
 
 		cmd.Action = func() {
 			if !tm.Valid() {
