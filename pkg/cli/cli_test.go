@@ -5,7 +5,32 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"testing"
+
+	"github.com/bradylove/jkl/pkg/cli"
+
+	"github.com/apoydence/onpar"
+	. "github.com/apoydence/onpar/expect"
+	. "github.com/apoydence/onpar/matchers"
 )
+
+func TestCLIDefaultCommand(t *testing.T) {
+	o := onpar.New()
+	defer o.Run(t)
+
+	o.Spec("default command is to goto project", func(t *testing.T) {
+		cr := &cmdRunner{}
+
+		cli.Run(&stubLogger{}, cr, tempManifest(), []string{"jkl", "jkl"},
+			cli.WithTmuxSocket("/tmp/tmux"),
+		)
+
+		Expect(t, cr.commands[0].Args).To(Equal([]string{
+			"bash", "-c",
+			"tmux -S /tmp/tmux send-keys 'cd /tmp/jkl' Enter",
+		}))
+	})
+}
 
 var (
 	manifestTemplate = `---
